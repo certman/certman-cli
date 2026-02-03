@@ -1,6 +1,6 @@
 {
   "name": "@certman/cli",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Create and manage your own Certificate Authority for internal HTTPS - simply, securely, and under your control.",
   "type": "module",
   "bin": {

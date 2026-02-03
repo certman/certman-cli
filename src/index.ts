@@ -5,10 +5,12 @@ import whoami from "./commands/whoami.js";
 import ca from "./commands/ca/index.js";
 import cert from "./commands/cert/index.js";
 
+declare const __VERSION__: string;
+
 const main = defineCommand({
   meta: {
     name: "certman",
-    version: "1.0.0",
+    version: __VERSION__,
     description: "CLI for Certman certificate management",
   },
   subCommands: {
