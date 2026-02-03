@@ -14,10 +14,10 @@ jobs:
         with:
           bun-version: latest
       - run: bun install --frozen-lockfile
+      - run: bun run lint
+      - run: bun run typecheck
+      - run: bun run build
       - run: bun run test
       - run: bun run test:integration
         env:
           CERTMAN_API_KEY: ${{ secrets.CERTMAN_API_KEY }}
-      - run: bun run lint
-      - run: bun run typecheck
-      - run: bun run build
