@@ -1,0 +1,58 @@
+{
+  "name": "@certman/cli",
+  "version": "1.0.1",
+  "description": "Create and manage your own Certificate Authority for internal HTTPS - simply, securely, and under your control.",
+  "type": "module",
+  "bin": {
+    "certman": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src tests",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:integration": "vitest run --config vitest.integration.config.ts",
+    "build:binaries": "bun run scripts/build-binaries.ts"
+  },
+  "dependencies": {
+    "@certman/sdk": "^1.0.0",
+    "citty": "^0.2.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.2",
+    "@types/node": "^25.2.0",
+    "eslint": "^9.39.2",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.54.0",
+    "vitest": "^4.0.18"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "certman",
+    "certificate",
+    "ssl",
+    "tls",
+    "pki",
+    "ca",
+    "api",
+    "sdk"
+  ],
+  "author": "Certman",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/certman/certman-cli.git"
+  },
+  "homepage": "https://certman.app",
+  "bugs": "https://github.com/certman/certman-cli/issues"
+}
