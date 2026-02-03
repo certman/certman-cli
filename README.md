@@ -21,15 +21,15 @@ npm install -g @certman/cli
 Download pre-built binaries from the [releases page](https://github.com/certman/certman-cli/releases).
 
 Available for:
-- Linux (x64, arm64)
-- macOS (x64, arm64)
-- Windows (x64)
+- Linux (amd64, arm64)
+- macOS (amd64, arm64)
+- Windows (amd64)
 
 ### Debian/Ubuntu
 
 ```bash
 # Download the .deb package from releases, then:
-sudo dpkg -i certman-amd64.deb
+sudo dpkg -i certman-linux-amd64.deb
 ```
 
 ## Quick Start

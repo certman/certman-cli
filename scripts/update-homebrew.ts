@@ -21,7 +21,7 @@ class Certman < Formula
 
   on_macos do
     on_arm do
-      url "https://github.com/certman/certman-cli/releases/download/v#{version}/certman-darwin-arm64"
+      url "https://github.com/certman/certman-cli/releases/download/v#{version}/certman-darwin-arm64.tar.gz"
       sha256 "${binaries["darwin-arm64"]}"
 
       def install
@@ -30,18 +30,18 @@ class Certman < Formula
     end
 
     on_intel do
-      url "https://github.com/certman/certman-cli/releases/download/v#{version}/certman-darwin-x64"
-      sha256 "${binaries["darwin-x64"]}"
+      url "https://github.com/certman/certman-cli/releases/download/v#{version}/certman-darwin-amd64.tar.gz"
+      sha256 "${binaries["darwin-amd64"]}"
 
       def install
-        bin.install "certman-darwin-x64" => "certman"
+        bin.install "certman-darwin-amd64" => "certman"
       end
     end
   end
 
   on_linux do
     on_arm do
-      url "https://github.com/certman/certman-cli/releases/download/v#{version}/certman-linux-arm64"
+      url "https://github.com/certman/certman-cli/releases/download/v#{version}/certman-linux-arm64.tar.gz"
       sha256 "${binaries["linux-arm64"]}"
 
       def install
@@ -50,11 +50,11 @@ class Certman < Formula
     end
 
     on_intel do
-      url "https://github.com/certman/certman-cli/releases/download/v#{version}/certman-linux-x64"
-      sha256 "${binaries["linux-x64"]}"
+      url "https://github.com/certman/certman-cli/releases/download/v#{version}/certman-linux-amd64.tar.gz"
+      sha256 "${binaries["linux-amd64"]}"
 
       def install
-        bin.install "certman-linux-x64" => "certman"
+        bin.install "certman-linux-amd64" => "certman"
       end
     end
   end
@@ -77,11 +77,11 @@ function main() {
 
   console.log(`Updating Homebrew formula for version ${version}`);
 
-  const targets = ["darwin-arm64", "darwin-x64", "linux-arm64", "linux-x64"];
+  const targets = ["darwin-arm64", "darwin-amd64", "linux-arm64", "linux-amd64"];
   const binaries: Record<string, string> = {};
 
   for (const target of targets) {
-    const artifactName = `certman-${target}`;
+    const artifactName = `certman-${target}.tar.gz`;
     const filePath = `${artifactsDir}/${artifactName}/${artifactName}`;
 
     console.log(`Calculating SHA256 for ${artifactName}...`);

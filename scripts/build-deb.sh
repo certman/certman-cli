@@ -9,11 +9,9 @@ PACKAGE_NAME="certman"
 case "$ARCH" in
   x64|amd64)
     DEB_ARCH="amd64"
-    BIN_ARCH="linux-x64"
     ;;
   arm64|aarch64)
     DEB_ARCH="arm64"
-    BIN_ARCH="linux-arm64"
     ;;
   *)
     echo "Unsupported architecture: $ARCH"
@@ -30,8 +28,8 @@ echo "Building Debian package for $DEB_ARCH..."
 mkdir -p "$PKGDIR/DEBIAN"
 mkdir -p "$PKGDIR/usr/bin"
 
-# Copy binary
-cp "bin/certman-${BIN_ARCH}" "$PKGDIR/usr/bin/certman"
+# Copy binary (uses naming: certman-linux-ARCH)
+cp "bin/${PACKAGE_NAME}-linux-${DEB_ARCH}" "$PKGDIR/usr/bin/certman"
 chmod 755 "$PKGDIR/usr/bin/certman"
 
 # Create control file
@@ -52,9 +50,9 @@ dpkg-deb --build "$PKGDIR"
 
 # Move to output directory
 mkdir -p deb
-mv "$WORKDIR/${PACKAGE_NAME}_${VERSION}_${DEB_ARCH}.deb" "deb/"
+mv "$WORKDIR/${PACKAGE_NAME}_${VERSION}_${DEB_ARCH}.deb" "deb/${PACKAGE_NAME}-linux-${DEB_ARCH}.deb"
 
 # Cleanup
 rm -rf "$WORKDIR"
 
-echo "Created: deb/${PACKAGE_NAME}_${VERSION}_${DEB_ARCH}.deb"
+echo "Created: deb/${PACKAGE_NAME}-linux-${DEB_ARCH}.deb"

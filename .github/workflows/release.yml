@@ -42,19 +42,24 @@ jobs:
         include:
           - os: ubuntu-latest
             target: linux-x64
-            artifact: certman-linux-x64
+            platform: linux
+            arch: amd64
           - os: ubuntu-latest
             target: linux-arm64
-            artifact: certman-linux-arm64
+            platform: linux
+            arch: arm64
           - os: macos-latest
             target: darwin-x64
-            artifact: certman-darwin-x64
+            platform: darwin
+            arch: amd64
           - os: macos-latest
             target: darwin-arm64
-            artifact: certman-darwin-arm64
+            platform: darwin
+            arch: arm64
           - os: windows-latest
             target: windows-x64
-            artifact: certman-windows-x64.exe
+            platform: windows
+            arch: amd64
 
     runs-on: ${{ matrix.os }}
 
@@ -72,13 +77,30 @@ jobs:
         run: bun run build
 
       - name: Build binary
-        run: bun build dist/index.js --compile --target=bun-${{ matrix.target }} --outfile=${{ matrix.artifact }}
+        shell: bash
+        run: |
+          BINARY_NAME="certman-${{ matrix.platform }}-${{ matrix.arch }}"
+          if [ "${{ matrix.platform }}" = "windows" ]; then
+            bun build dist/index.js --compile --target=bun-${{ matrix.target }} --outfile="${BINARY_NAME}.exe"
+          else
+            bun build dist/index.js --compile --target=bun-${{ matrix.target }} --outfile="${BINARY_NAME}"
+          fi
+
+      - name: Create tar.gz archive
+        shell: bash
+        run: |
+          BINARY_NAME="certman-${{ matrix.platform }}-${{ matrix.arch }}"
+          if [ "${{ matrix.platform }}" = "windows" ]; then
+            tar -czvf "${BINARY_NAME}.tar.gz" "${BINARY_NAME}.exe"
+          else
+            tar -czvf "${BINARY_NAME}.tar.gz" "${BINARY_NAME}"
+          fi
 
       - name: Upload artifact
         uses: actions/upload-artifact@v6
         with:
-          name: ${{ matrix.artifact }}
-          path: ${{ matrix.artifact }}
+          name: certman-${{ matrix.platform }}-${{ matrix.arch }}.tar.gz
+          path: certman-*.tar.gz
           retention-days: 7
 
   build-deb:
@@ -94,8 +116,13 @@ jobs:
       - name: Download linux binary
         uses: actions/download-artifact@v7
         with:
-          name: certman-linux-${{ matrix.arch == 'amd64' && 'x64' || 'arm64' }}
-          path: bin/
+          name: certman-linux-${{ matrix.arch }}.tar.gz
+          path: .
+
+      - name: Extract binary
+        run: |
+          mkdir -p bin
+          tar -xzvf "certman-linux-${{ matrix.arch }}.tar.gz" -C bin/
 
       - name: Build Debian package
         run: |
@@ -105,7 +132,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v6
         with:
-          name: certman-${{ matrix.arch }}.deb
+          name: certman-linux-${{ matrix.arch }}.deb
           path: deb/*.deb
           retention-days: 7
 
