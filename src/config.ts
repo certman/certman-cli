@@ -23,8 +23,10 @@ export function loadConfigFile(): Config {
 }
 
 export function saveConfigFile(config: Config): void {
-  mkdirSync(dirname(CONFIG_PATH), { recursive: true });
-  writeFileSync(CONFIG_PATH, JSON.stringify(config, null, 2) + "\n");
+  mkdirSync(dirname(CONFIG_PATH), { recursive: true, mode: 0o700 });
+  writeFileSync(CONFIG_PATH, JSON.stringify(config, null, 2) + "\n", {
+    mode: 0o600,
+  });
 }
 
 export function getApiKey(cliFlag?: string): string | undefined {

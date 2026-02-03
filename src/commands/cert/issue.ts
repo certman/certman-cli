@@ -111,24 +111,31 @@ export default defineCommand({
 
       const result = await client.certificates.issue(request);
 
-      if (args.json) {
-        output(result, { json: true });
-      } else if (args["out-cert"] || args["out-key"]) {
-        // Write files if requested
-        if (args["out-cert"]) {
-          writeFileSync(args["out-cert"], result.certificate.certificate_pem);
-          console.log(`Certificate written to ${args["out-cert"]}`);
-        }
+      // Write files if requested
+      if (args["out-cert"]) {
+        writeFileSync(args["out-cert"], result.certificate.certificate_pem);
+        console.log(`Certificate written to ${args["out-cert"]}`);
+      }
 
-        if (args["out-key"] && result.privateKey) {
-          writeFileSync(args["out-key"], result.privateKey, { mode: 0o600 });
-          console.log(`Private key written to ${args["out-key"]}`);
-        }
-      } else {
-        // Print PEM to stdout
-        console.log(result.certificate.certificate_pem);
-        if (result.privateKey) {
-          console.log(result.privateKey);
+      if (args["out-key"] && result.privateKey) {
+        writeFileSync(args["out-key"], result.privateKey, { mode: 0o600 });
+        console.log(`Private key written to ${args["out-key"]}`);
+      }
+
+      // Output result (unless files were written)
+      if (!args["out-cert"] && !args["out-key"]) {
+        if (args.json) {
+          output(result, { json: true });
+        } else {
+          // Output formatted key-value pairs
+          output({
+            id: result.certificate.id,
+            commonName: result.certificate.common_name,
+            validFrom: result.certificate.valid_from,
+            validTo: result.certificate.valid_to,
+            certificate: result.certificate.certificate_pem,
+            privateKey: result.privateKey ?? "",
+          }, { json: false });
         }
       }
     } catch (error) {

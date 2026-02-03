@@ -62,16 +62,20 @@ describe("cert issue command", () => {
     vi.clearAllMocks();
   });
 
-  it("prints certificate and key PEM to stdout when no output files specified", async () => {
+  it("outputs formatted key-value pairs when no output files specified", async () => {
     await runCommand(issueCommand, {
       rawArgs: ["--ca-id", "ca-123"],
     });
 
-    expect(consoleSpy).toHaveBeenCalledWith(mockCertificateResult.certificate.certificate_pem);
-    expect(consoleSpy).toHaveBeenCalledWith(mockCertificateResult.privateKey);
+    // Verify key-value formatted output
+    const calls = consoleSpy.mock.calls.map(c => c[0]);
+    expect(calls.some(c => c.includes("id") && c.includes("cert-123"))).toBe(true);
+    expect(calls.some(c => c.includes("commonName") && c.includes("test.local"))).toBe(true);
+    expect(calls.some(c => c.includes("certificate") && c.includes("BEGIN CERTIFICATE"))).toBe(true);
+    expect(calls.some(c => c.includes("privateKey") && c.includes("BEGIN PRIVATE KEY"))).toBe(true);
   });
 
-  it("prints only certificate PEM when no private key returned (CSR mode)", async () => {
+  it("outputs formatted key-value pairs with empty privateKey when no private key returned (CSR mode)", async () => {
     mockIssue.mockResolvedValue({
       certificate: mockCertificateResult.certificate,
       privateKey: undefined,
@@ -81,8 +85,9 @@ describe("cert issue command", () => {
       rawArgs: ["--ca-id", "ca-123"],
     });
 
-    expect(consoleSpy).toHaveBeenCalledWith(mockCertificateResult.certificate.certificate_pem);
-    expect(consoleSpy).toHaveBeenCalledTimes(1);
+    const calls = consoleSpy.mock.calls.map(c => c[0]);
+    expect(calls.some(c => c.includes("id") && c.includes("cert-123"))).toBe(true);
+    expect(calls.some(c => c.includes("certificate") && c.includes("BEGIN CERTIFICATE"))).toBe(true);
   });
 
   it("outputs JSON when --json flag is provided", async () => {
