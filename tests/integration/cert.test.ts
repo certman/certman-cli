@@ -20,8 +20,11 @@ describe("cert commands", () => {
       const result = runCliWithApiKey(["cert", "list"]);
 
       expect(result.exitCode).toBe(0);
-      expect(result.stdout).toContain("ID");
-      expect(result.stdout).toContain("COMMON NAME");
+      // Output can be either a table with headers or "No results found" for empty list
+      const hasTableHeaders =
+        result.stdout.includes("ID") && result.stdout.includes("COMMON NAME");
+      const hasEmptyMessage = result.stdout.includes("No results found");
+      expect(hasTableHeaders || hasEmptyMessage).toBe(true);
     });
 
     it("returns JSON when --json flag is set", () => {

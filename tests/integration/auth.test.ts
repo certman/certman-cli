@@ -84,8 +84,9 @@ describe("auth commands", () => {
     });
 
     it("preserves other config values", () => {
-      // Login with a key
-      runCli(["login", `--api-key=test-key`]);
+      // Login with a valid key
+      const apiKey = process.env.CERTMAN_API_KEY!;
+      runCli(["login", `--api-key=${apiKey}`]);
 
       // Manually add another config value
       const config = JSON.parse(readFileSync(configPath, "utf-8"));
