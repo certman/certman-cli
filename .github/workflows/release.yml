@@ -30,6 +30,8 @@ jobs:
         run: bun run test
       - name: Run integration tests
         run: bun run test:integration
+        env:
+          CERTMAN_API_KEY: ${{ secrets.CERTMAN_API_KEY }}
 
   build:
     needs: test
